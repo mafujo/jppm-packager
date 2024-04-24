@@ -1,10 +1,34 @@
 name: jppm
 version: 0.6.7
-
-plugins: [GitHub, Hub, Doc]
-
 deps:
+  jphp-core: '*'
+  jphp-zend-ext: '*'
+  jphp-yaml-ext: '*'
+  jphp-compress-ext: '*'
+  jphp-json-ext: '*'
+  jphp-jsoup-ext: '*'
+  jphp-semver-ext: '*'
+  jphp-text-ext: '*'  
+  jphp-httpclient-ext: '*'
+  #jphp-git-ext: '*'
+  jphp-parser-ext: '*'
   jphp-dffi-ext: 2.0.0 # copy libs to dffi dir in root if you want to upgrade dffi ext
+
+  jphp-httpserver-ext: '*'
+  jphp-gui-ext: '*'
+  
+plugins: [App, GitHub, Hub, Doc]
+
+sources:
+- src-php
+includes:
+- app.php
+
+app:
+  args: ['ui']
+  build:
+    type: one-jar
+    file-name: 'packager-all'
 
 hub:
   login: d.zayceff@gmail.com
