@@ -1,39 +1,30 @@
 name: jppm
 version: 0.6.7
 
-plugins: [GitHub, Hub, Doc]
+plugins: [App, GitHub, Hub, Doc]
+
+sources:
+  - src-php
+includes:
+  - app.php
 
 deps:
+  jphp-core: '*'
+  jphp-runtime: '*'
+  jphp-zend-ext: '*'
+  jphp-yaml-ext: '*'
+  jphp-compress-ext: '*'
+  jphp-json-ext: '*'
+  jphp-jsoup-ext: '*'
+  jphp-semver-ext: '*'
+  jphp-text-ext: '*'  
+  jphp-httpclient-ext: '*'
+  #jphp-git-ext: '*'
+  jphp-parser-ext: '*'
   jphp-dffi-ext: 2.0.0 # copy libs to dffi dir in root if you want to upgrade dffi ext
+  jphp-cli: '*'
 
-hub:
-  login: d.zayceff@gmail.com
-
-github:
-  address: 'https://github.com/jphp-group/jphp'
-  tag-prefix: '%name%-'
-  title: '%name% %version%'
-  description: |
-    > JPHP Package Manager v%version%
-
-    **What's new**
-    + Add JPPM_OS_BUILD env option.
-
-    **Downloads**
-    + For Windows: [JPPM Windows Installer](%github.address%/releases/download/jppm-%version%/jppm-setup-%version%.exe)
-    + For Linux: [JPPM Linux Distributive](%github.address%/releases/download/jppm-%version%/jppm-%version%.tar.gz)
-
-    **How To Install**
-    + For Windows: Run jppm-setup-%version%.exe and that's is all!
-    + For Linux:
-    ```bash
-    wget -O - %github.address%/releases/download/jppm-%version%/jppm-setup-%version%.sh | bash
-    ```
-
-  assets:
-    - {file: '../jppm-setup-%version%.exe', contentType: 'application/octet-stream', ifExists: true}
-    - {file: '../jppm-setup-%version%.sh', contentType: 'application/octet-stream'}
-
-
-config:
-  ignore: ['/package.github.yml', '/package.hub.yml', '/example/**', '/installer/**']
+app:
+  build:
+    type: one-jar
+    file-name: 'packager-all'

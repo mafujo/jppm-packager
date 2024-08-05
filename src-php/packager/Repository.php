@@ -81,7 +81,9 @@ class Repository
             }
         }
 
-        $this->addExternalRepoByString("jphp");
+        //$this->addExternalRepoByString("jphp");
+        $this->addExternalRepo(new ServerRepository("http://jppm.koso-group.ru"));
+        
         //$this->addExternalRepoByString("central");
     }
 
@@ -130,7 +132,7 @@ class Repository
             return $cache['versions'];
         }
 
-        Console::log("-> get versions of package {0}, source: {1}", $pkgName, $repository->getSource());
+        Console::logTask("Discovering package {0}, source: {1}", $pkgName, $repository->getSource());
 
         try {
             $versions = $repository->getVersions($pkgName);
@@ -223,7 +225,7 @@ class Repository
     {
         if ($repo === "jphp") {
             //$this->addExternalRepo(new GithubReleasesRepository("https://github.com/jphp-compiler/jphp-repo/releases"));
-            return $this->addExternalRepo(new ServerRepository("http://api.develnext.org"));
+            return $this->addExternalRepo(new ServerRepository("http://api.develnext.org"));            
         }
 
         if ($repo === "central") {

@@ -35,11 +35,11 @@ class Colors {
         "white_bg"   => 47,
     );
 
-    public static function withColor($str, $color)
+    public static function withColor($str, $color, bool $fill = false)
     {
-        if (!DFFIConsole::hasColorSupport()) {
-            return $str;
-        }
+        //if (!DFFIConsole::hasColorSupport()) {
+        //    return $str;
+        //}
 
         $color_attrs = explode("+", $color);
         $ansi_str = "";

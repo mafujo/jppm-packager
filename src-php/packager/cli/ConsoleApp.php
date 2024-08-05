@@ -35,7 +35,11 @@ use php\time\Timer;
 use semver\SemVersion;
 use Tasks;
 use text\TextWord;
+
 use function var_dump;
+
+use kosogroup\jphp\cli\AnsiConsole;
+use packager\Colors;
 
 /**
  * Class ConsoleApp
@@ -60,6 +64,7 @@ class ConsoleApp
 
     function main(array $args)
     {
+        
         DFFIConsole::enableColors();
         
         try {
@@ -71,6 +76,8 @@ class ConsoleApp
             Repository::registerExternalRepositoryClass(ServerRepository::class);
 
             $this->packager = new Packager();
+
+            Console::log("\n  " . Colors::withColor("  JPPM  ", 'blue_bg') . Colors::withColor(Colors::withColor(Colors::withColor(" Terminal ", 'bold'), 'blue'), 'white_bg') . "\n");
 
             $args = flow($args)->find(function ($arg) {
                 if (str::startsWith($arg, "--")) {
@@ -112,7 +119,7 @@ class ConsoleApp
             }
 
             if ($os) {
-                Console::log("-> $os");
+                Console::logValue("Platform", $os);
                 Package::setOS($os);
             }
 
@@ -126,6 +133,9 @@ class ConsoleApp
             $this->loadPlugin(DefaultPlugin::class);
 
             if ($this->getPackage()) {
+
+                Console::logValue("Project", Colors::withColor($this->getPackage()->getName(), 'magenta'));
+
                 $this->loadPlugins();
 
                 foreach ($this->getPackage()->getRepos() as $repo) {
@@ -176,6 +186,8 @@ class ConsoleApp
                 }
             }
 
+
+
             foreach (str::split($command, '+') as $item) {
                 $this->invokeTask($item, flow($args)->skip(2)->toArray(), ...flow($this->flags)->keys());
             }
@@ -205,12 +217,13 @@ class ConsoleApp
 
         switch ($task) {
             case "version":
-                Console::log('JPPM Information:');
-                Console::log("-> version: {0}", $this->packager->getVersion());
-                Console::log("--> jphp: {0}", JPHP_VERSION);
-                Console::log("--> java: {0} ({1})", System::getProperty("java.version"), System::getProperty("os.arch"));
-                Console::log("-> home: '{0}'", System::getProperty("jppm.home"));
-                Console::log("--> java home: '{0}'", $_ENV['JAVA_HOME']);
+                //Console::log("\n  " . Colors::withColor("  JPPM  ", 'blue_bg') . Colors::withColor(Colors::withColor(Colors::withColor(" Information ", 'bold'), 'blue'), 'white_bg') . "\n");
+                Console::logValue("JPPM Version", Colors::withColor($this->packager->getVersion(), 'cyan'));
+                Console::logValue("JPPM Home", Colors::withColor(System::getProperty("jppm.home"), 'cyan'));
+                Console::logValue("JPHP Version", Colors::withColor(JPHP_VERSION, 'cyan'));
+                Console::logValue("JAVA Version", Colors::withColor(System::getProperty("java.version") . ' ' . System::getProperty("os.arch"), 'cyan'));
+                Console::logValue("JAVA Home", Colors::withColor($_ENV['JAVA_HOME'], 'cyan'));
+                Console::log('');
 
                 break;
 
@@ -222,7 +235,7 @@ class ConsoleApp
                         $this->invokeTask($one, $args, ...$flags);
                     }
 
-                    Console::log("-> {0} {1}", $task, ($flags ? '-' : '') . flow($flags)->keys()->toString(' -'));
+                    Console::logValue("Task", Colors::withColor($task, 'green') . Colors::withColor(($flags ? ' -' : '') . flow($flags)->keys()->toString(' -'), 'yellow'));
 
                     $handler($args, $flags);
                     break;
@@ -263,7 +276,6 @@ class ConsoleApp
             $prefix = Annotations::getOfClass('jppm-task-prefix', $class, "");
             $tasks = Annotations::getOfClass('jppm-task', $class, []);
 
-            $pluginObject = null;
 
             foreach ($tasks as $task) {
                 [$task, $taskName] = str::split($task, ' as ');
@@ -404,7 +416,6 @@ class ConsoleApp
                 $dir = fs::abs("./");
                 $repo = $this->packager->getRepo();
                 $pkg = $repo->readPackage("$dir/" . Package::FILENAME);
-
                 foreach ($this->packager->getProfiles() as $profile) {
                     $profilePkg = $repo
                         ->readPackage("$dir/" . str::format(Package::FILENAME_S, $profile));

@@ -425,7 +425,7 @@ class AppPlugin
         $time = Time::millis() - $time;
 
         Console::log("\n-----");
-        Console::log("Building time: {0} sec.", round($time / 1000, 2));
+        Console::logValue("Building time", Colors::withColor(round($time / 1000, 2), 'green') . " sec");
         Console::log("Building is SUCCESSFUL. :)");
     }
 

@@ -41,9 +41,13 @@ class ServerRepository extends ExternalRepository
         $res = $this->client->send(new HttpRequest('GET', '/repo/find', [], ['name' => $pkgName]));
 
         if ($res->isSuccess()) {
+            Console::logTaskResult();
             return (array) $res->body()['versions'];
         } else {
-            Console::warn("Failed to find package '{2}' in {0}, {1}", $this->getSource(), $res->statusMessage(), $pkgName);
+
+            //Console::warn("Failed to find package '{2}' in {0}, {1}", $this->getSource(), $res->statusMessage(), $pkgName);
+            Console::logTaskResult(true);
+
             return [];
         }
     }

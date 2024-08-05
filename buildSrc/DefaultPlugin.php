@@ -58,17 +58,15 @@ class DefaultPlugin
     {
         global $app;
 
-        Console::log("\nAvailable tasks:");
-
-        Console::log("");
+        Console::info(Colors::withColor("Available tasks:", 'magenta'));
 
         foreach ($app->getCommands() as $command => $one) {
             ['handler' => $handler, 'description' => $desc] = $one;
 
             if ($desc) {
-                Console::log(" -> $command - $desc");
+                Console::log(" ~$ " . Colors::withColor($command, 'cyan') . " - $desc");
             } else {
-                Console::log(" -> $command");
+                Console::log(" ~$ " . Colors::withColor($command, 'cyan'));
             }
         }
 
@@ -92,8 +90,9 @@ class DefaultPlugin
                 Console::error("Failed to init, package '{0}' already exists", $dir . '/' . Package::FILENAME);
                 exit(-1);
             }
-            Console::log(Colors::withColor("JPHP Packager", 'silver') . " " . Colors::withColor($event->packager()->getVersion(), 'bold'));
-            Console::log("Init new package in dir '$dir':");
+            Console::log("\n" . Colors::withColor("  JPHP  ", 'blue_bg') . Colors::withColor(Colors::withColor(Colors::withColor($event->packager()->getVersion(), 'bold'), 'blue'), 'white_bg') . "\n");
+            //Console::log(Colors::withColor("JPHP Packager", 'silver') . " " . Colors::withColor($event->packager()->getVersion(), 'bold'));
+            Console::log("Init new  in dir '$dir':");
 
             $name = fs::name(fs::parent($dir . "/foo"));
             $version = "1.0.0";
